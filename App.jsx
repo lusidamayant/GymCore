@@ -15,7 +15,7 @@ export default function App() {
       {/* NAVBAR SECTION */}
       <View style={navbar.container}>
         <View style={navbar.searchBox}>
-          <Text style={{color: colors.white}}>Search Gym Doorz Location</Text>
+          <Text style={{color: colors.white}}>Search Gym Core Location</Text>
           <SearchNormal color={colors.white} size={20} />
         </View>
         {/* <View>
@@ -48,7 +48,7 @@ export default function App() {
         </View>
 
         <View style={content.container}>
-          <Text style={[content.text, {fontSize: TFontSize.xl, fontWeight: TFontWeight.bold}]}>Nearby Gym Doorz</Text>
+          <Text style={[content.text, {fontSize: TFontSize.xl, fontWeight: TFontWeight.bold}]}>Nearby Gym Core</Text>
           <Text style={{color: colors.primary}}>See More</Text>
         </View>
 
@@ -56,7 +56,7 @@ export default function App() {
           <View key="1" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A (10 Km)</Text>
+              <Text style={styles.text}>Gym Core A (10 Km)</Text>
               {/* <Text style={styles.text}></Text> */}
               <ArrowRight color={colors.black} size={22} />
             </View>
@@ -64,14 +64,14 @@ export default function App() {
           <View key="2" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A</Text>
+              <Text style={styles.text}>Gym Core A</Text>
               <Text style={styles.text}>(10 Km)</Text>
             </View>
           </View>
           <View key="3" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A</Text>
+              <Text style={styles.text}>Gym Core A</Text>
               <Text style={styles.text}>(10 Km)</Text>
             </View>
           </View>
@@ -88,7 +88,7 @@ export default function App() {
           <View key="1" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A (10 Km)</Text>
+              <Text style={styles.text}>Gym Core A (10 Km)</Text>
               {/* <Text style={styles.text}></Text> */}
               <ArrowRight color={colors.black} size={22} />
             </View>
@@ -96,14 +96,14 @@ export default function App() {
           <View key="2" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A</Text>
+              <Text style={styles.text}>Gym Core A</Text>
               <Text style={styles.text}>(10 Km)</Text>
             </View>
           </View>
           <View key="3" style={styles.card}>
             <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
             <View style={styles.label}>
-              <Text style={styles.text}>Gym Doorz A</Text>
+              <Text style={styles.text}>Gym Core A</Text>
               <Text style={styles.text}>(10 Km)</Text>
             </View>
           </View>
@@ -121,15 +121,15 @@ export default function App() {
           <Text style={[bottomNav.text, { color: colors.danger }]}>Home</Text>
         </View>
         <View style={bottomNav.item}>
-          <Discover color={colors.black} size={26} variant='Bold'/>
+          <Discover color={colors.textPrimary} size={26} variant='Bold'/>
           <Text style={bottomNav.text}>Explore</Text>
         </View>
         <View style={bottomNav.item}>
-          <Notepad2 color={colors.black} size={26} variant='Bold'/>
+          <Notepad2 color={colors.textPrimary} size={26} variant='Bold'/>
           <Text style={bottomNav.text}>News</Text>
         </View>
         <View style={bottomNav.item}>
-          <User color={colors.black} size={26} variant='Bold'/>
+          <User color={colors.textPrimary} size={26} variant='Bold'/>
           <Text style={bottomNav.text}>Profile</Text>
         </View>
       </View>
@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.textPrimary
   }
 });
 
@@ -227,7 +228,8 @@ const bottomNav = StyleSheet.create({
     alignItems: 'center'
   },
   text: {
-    fontSize: TFontSize.sm
+    fontSize: TFontSize.sm,
+    color: colors.textPrimary
   }
 });
 
@@ -256,7 +258,7 @@ const content = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: colors.white,
+    color: colors.textSecondary,
     fontFamily: fontType.bold,
   }
 });
