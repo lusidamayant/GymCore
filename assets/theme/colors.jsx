@@ -1,5 +1,5 @@
 const colors = {
-    primary: '#3498db',
+    primary: '#f5ed05',
     secondary: '#d4c904',
     success: '#c2b303',
     danger: '#e85233',
@@ -12,7 +12,7 @@ const colors = {
     black: '#1f1f1d',
     gray: '#bfbf5e',
     grayDark: '#7a7a3a',
-    base: '#f7f7f7',
+    base: '#1f1f1d',
 }
 
 export default colors;
