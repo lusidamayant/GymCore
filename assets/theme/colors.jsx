@@ -13,6 +13,7 @@ const colors = {
     gray: '#bfbf5e',
     grayDark: '#7a7a3a',
     base: '#f7f7f7',
+    textPrimary: "#f7f7f7",
 }
 
 export default colors;
