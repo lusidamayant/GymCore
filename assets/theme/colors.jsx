@@ -14,6 +14,7 @@ const colors = {
     grayDark: '#7a7a3a',
     base: '#f7f7f7',
     textPrimary: "#f7f7f7",
+    textSecondary: "#1f1f1d",
 }
 
 export default colors;
