@@ -256,7 +256,7 @@ const content = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: colors.white,
+    color: colors.black,
     fontFamily: fontType.bold,
   }
 });
