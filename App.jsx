@@ -2,7 +2,46 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, StatusBar as RNStatusBar, Platform, Appearance, ScrollView, Image, Dimensions } from 'react-native';
 import { colors, fontType } from './assets/theme';
 import { TPadding, TRadius, TFontSize, TMargin, TFontWeight } from './assets/TStyle';
-import { SearchNormal, Notification, Home2, User, DiscountShape, TransactionMinus, LocationDiscover, Discover, Notepad2, ArrowRight } from 'iconsax-react-native';
+import { SearchNormal, Notification, Home2, User, DiscountShape, TransactionMinus, LocationDiscover, Discover, Notepad2, ArrowRight, Heart } from 'iconsax-react-native';
+import { useState } from 'react';
+import Navbar from './src/components/Navbar';
+import Card from './src/components/Card';
+
+const gymLists = [
+  {
+    id: 1,
+    title: "Gym Core Malang (10 Km)",
+    img: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp"
+  },
+  {
+    id: 2,
+    title: "Gym Core Surabaya (80 Km)",
+    img: "https://malangraya.blok-a.com/wp-content/uploads/sites/5/2024/03/WhatsApp-Image-2024-03-07-at-19.46.57-1.jpeg"
+  },
+  {
+    id: 3,
+    title: "Gym Core Jakarta (220 Km)",
+    img: "https://smartlegal.id/wp-content/uploads/bb-plugin/cache/usaha-gym-jpg-landscape.webp"
+  },
+];
+
+const newsList = [
+  {
+    id: 1,
+    title: "What is Gym?",
+    img: "https://www.its.ac.id/news/wp-content/uploads/sites/2/2023/08/4-Reasons-to-Keep-Going-to-the-Gym-During-an-Outbreak-happy-people-equipment.jpg"
+  },
+  {
+    id: 2,
+    title: "How to Gym properly",
+    img: "https://www.healthandfitness.org/uploads/Articles/Column-Width/_1200x630_crop_center-center_82_none/industry-news_muscular-bicep-dumbbell-stock_column.jpg?mtime=1556896023"
+  },
+  {
+    id: 3,
+    title: "Is steroid legal?",
+    img: "https://images.theconversation.com/files/638421/original/file-20241213-15-qycm4c.jpg?ixlib=rb-4.1.0&q=20&auto=format&w=320&fit=clip&dpr=2&usm=12&cs=strip"
+  },
+];
 
 export default function App() {
   Appearance.setColorScheme('light');
@@ -11,105 +50,57 @@ export default function App() {
     <View style={styles.container}>
       {/* Atur warna status bar */}
       <StatusBar style="light" backgroundColor={colors.primary} />
-      
+
       {/* NAVBAR SECTION */}
-      <View style={navbar.container}>
-        <View style={navbar.searchBox}>
-          <Text style={{color: colors.white}}>Search Gym Core Location</Text>
-          <SearchNormal color={colors.white} size={20} />
-        </View>
-        {/* <View>
-          <Notification color={colors.black} size={30} fill={colors.black} variant='Bold' />
-        </View> */}
-      </View>
+      <Navbar />
 
       <ScrollView>
         {/* CAROUSEL SECTION */}
         <View style={carousel.container}>
-          <ScrollView 
-            horizontal 
-            pagingEnabled 
+          <ScrollView
+            horizontal
+            pagingEnabled
             showsHorizontalScrollIndicator={false}
             style={{ width: '100%', height: 280 }}
           >
-            <Image 
-              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }} 
-              style={carousel.image} 
+            <Image
+              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }}
+              style={carousel.image}
             />
-            <Image 
-              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }} 
-              style={carousel.image} 
+            <Image
+              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }}
+              style={carousel.image}
             />
-            <Image 
-              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }} 
-              style={carousel.image} 
+            <Image
+              source={{ uri: 'https://res.cloudinary.com/dk0z4ums3/image/upload/v1623207171/attached_image/memaksimalisasi-manfaat-fitness-di-gym.jpg' }}
+              style={carousel.image}
             />
           </ScrollView>
         </View>
 
         <View style={content.container}>
-          <Text style={[content.text, {fontSize: TFontSize.xl, fontWeight: TFontWeight.bold}]}>Nearby Gym Core</Text>
-          <Text style={{color: colors.primary}}>See More</Text>
+          <Text style={[content.text, { fontSize: TFontSize.xl, fontWeight: TFontWeight.bold }]}>Nearby Gym Core</Text>
+          <Text style={{ color: colors.primary }}>See More</Text>
         </View>
 
         <ScrollView style={{ paddingLeft: TPadding.md }} horizontal showsHorizontalScrollIndicator={false}>
-          <View key="1" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A (10 Km)</Text>
-              {/* <Text style={styles.text}></Text> */}
-              <ArrowRight color={colors.black} size={22} />
-            </View>
-          </View>
-          <View key="2" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A</Text>
-              <Text style={styles.text}>(10 Km)</Text>
-            </View>
-          </View>
-          <View key="3" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A</Text>
-              <Text style={styles.text}>(10 Km)</Text>
-            </View>
-          </View>
+          {gymLists.map((el, i) => (
+            <Card key={i} id={i} imageSrc={el.img} caption={el.title} />
+          ))}
         </ScrollView>
+
 
         {/* NEWS SECTION */}
-
         <View style={content.container}>
-          <Text style={[content.text, {fontSize: TFontSize.xl, fontWeight: TFontWeight.bold}]}>News</Text>
-          <Text style={{color: colors.primary}}>See More</Text>
+          <Text style={[content.text, { fontSize: TFontSize.xl, fontWeight: TFontWeight.bold }]}>News</Text>
+          <Text style={{ color: colors.primary }}>See More</Text>
         </View>
 
         <ScrollView style={{ paddingLeft: TPadding.md }} horizontal showsHorizontalScrollIndicator={false}>
-          <View key="1" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A (10 Km)</Text>
-              {/* <Text style={styles.text}></Text> */}
-              <ArrowRight color={colors.black} size={22} />
-            </View>
-          </View>
-          <View key="2" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A</Text>
-              <Text style={styles.text}>(10 Km)</Text>
-            </View>
-          </View>
-          <View key="3" style={styles.card}>
-            <Image source={{ uri: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp" }} style={styles.image} />
-            <View style={styles.label}>
-              <Text style={styles.text}>Gym Core A</Text>
-              <Text style={styles.text}>(10 Km)</Text>
-            </View>
-          </View>
+          {newsList.map((el, i) => <Card key={i} id={i} imageSrc={el.img} caption={el.title} />)}
         </ScrollView>
 
-        <View style={{height: 100}}>
+        <View style={{ height: 100 }}>
 
         </View>
       </ScrollView>
@@ -117,19 +108,19 @@ export default function App() {
       {/* BOTTOM NAV SECTION */}
       <View style={bottomNav.container}>
         <View style={bottomNav.item}>
-          <Home2 color={colors.danger} size={26} variant='Bold'/>
+          <Home2 color={colors.danger} size={26} variant='Bold' />
           <Text style={[bottomNav.text, { color: colors.danger }]}>Home</Text>
         </View>
         <View style={bottomNav.item}>
-          <Discover color={colors.textPrimary} size={26} variant='Bold'/>
+          <Discover color={colors.textPrimary} size={26} variant='Bold' />
           <Text style={bottomNav.text}>Explore</Text>
         </View>
         <View style={bottomNav.item}>
-          <Notepad2 color={colors.textPrimary} size={26} variant='Bold'/>
+          <Notepad2 color={colors.textPrimary} size={26} variant='Bold' />
           <Text style={bottomNav.text}>News</Text>
         </View>
         <View style={bottomNav.item}>
-          <User color={colors.textPrimary} size={26} variant='Bold'/>
+          <User color={colors.textPrimary} size={26} variant='Bold' />
           <Text style={bottomNav.text}>Profile</Text>
         </View>
       </View>
@@ -144,70 +135,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.base,
     paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0, // Hindari overlap di Android
   },
-  card: {
-    width: Dimensions.get('window').width - 20,
-    height: 200,
-    borderRadius: TRadius.md,
-    // backgroundColor: '#fff',
-    marginRight: 10,
-    // elevation: 3, // Shadow effect
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    filter: 'brightness(0.6)',
-    resizeMode: 'cover',
-  },
-  label: {
-    textAlign: 'center',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    padding: TPadding.sm,
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   text: {
     fontSize: 16,
     fontWeight: 'bold',
     color: colors.textPrimary
   }
-});
-
-const navbar = StyleSheet.create({
-  container: {
-    backgroundColor: colors.primary,
-    // height: 50,
-    position: 'absolute',
-    top: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0,
-    zIndex: 10,
-    padding: TPadding.sm,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    gap: 2,
-    alignItems: 'center',
-    borderBottomLeftRadius: TRadius.lg,
-    borderBottomRightRadius: TRadius.lg,
-  },
-  text: {
-    color: colors.black,
-    fontFamily: fontType.bold,
-    fontSize: 20,
-  },
-  searchBox: {
-    backgroundColor: colors.black,
-    width: '100%',
-    flexDirection: 'row',
-    // height: 40,
-    padding: 14,
-    borderRadius: TRadius.lg,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
 });
 
 const bottomNav = StyleSheet.create({
