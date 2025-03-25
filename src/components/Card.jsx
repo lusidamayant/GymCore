@@ -67,8 +67,8 @@ const wishlist = StyleSheet.create({
         borderRadius: TRadius.lg,
         height: 50,
         position: 'absolute',
-        top: 5,
-        right: 5,
+        top: 16,
+        right: 16,
         justifyContent: 'center',
         alignItems: 'center',
     }
