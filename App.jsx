@@ -10,17 +10,17 @@ import Card from './src/components/Card';
 const gymLists = [
   {
     id: 1,
-    title: "Gym Core Malang (10 Km)",
+    title: "Gym Doorz Malang (10 Km)",
     img: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp"
   },
   {
     id: 2,
-    title: "Gym Core Surabaya (80 Km)",
+    title: "Gym Doorz Surabaya (80 Km)",
     img: "https://malangraya.blok-a.com/wp-content/uploads/sites/5/2024/03/WhatsApp-Image-2024-03-07-at-19.46.57-1.jpeg"
   },
   {
     id: 3,
-    title: "Gym Core Jakarta (220 Km)",
+    title: "Gym Doorz Jakarta (220 Km)",
     img: "https://smartlegal.id/wp-content/uploads/bb-plugin/cache/usaha-gym-jpg-landscape.webp"
   },
 ];
@@ -79,7 +79,7 @@ export default function App() {
         </View>
 
         <View style={content.container}>
-          <Text style={[content.text, { fontSize: TFontSize.xl, fontWeight: TFontWeight.bold }]}>Nearby Gym Core</Text>
+          <Text style={[content.text, { fontSize: TFontSize.xl, fontWeight: TFontWeight.bold }]}>Nearby Gym Doorz</Text>
           <Text style={{ color: colors.primary }}>See More</Text>
         </View>
 
