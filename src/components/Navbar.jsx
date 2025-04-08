@@ -22,7 +22,7 @@ const navbar = StyleSheet.create({
     backgroundColor: colors.primary,
     // height: 50,
     position: 'absolute',
-    top: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // top: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     zIndex: 10,
     padding: TPadding.sm,
     width: '100%',
