@@ -11,7 +11,7 @@ export default function App() {
     <View style={styles.container}>
       {/* Atur warna status bar */}
       <StatusBar style="light" backgroundColor={colors.primary} />
-      <News />
+      <Profile />
     </View>
   );
 }
