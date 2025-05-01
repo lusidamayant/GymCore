@@ -3,16 +3,19 @@ import Profile from "./src/screens/Profile";
 import { colors } from "./assets/theme";
 import Home from "./src/screens/Home";
 import News from "./src/screens/News";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   Appearance.setColorScheme('light');
 
   return (
-    <View style={styles.container}>
-      {/* Atur warna status bar */}
-      <StatusBar style="light" backgroundColor={colors.primary} />
-      <Profile />
-    </View>
+    <NavigationContainer>
+      <View style={styles.container}>
+        {/* Atur warna status bar */}
+        <StatusBar style="light" backgroundColor={colors.primary} />
+        <Home />
+      </View>
+    </NavigationContainer>
   );
 }
 
