@@ -4,13 +4,13 @@ import { colors, fontType } from '../../../assets/theme';
 import { TPadding, TRadius, TFontSize, TMargin, TFontWeight } from '../../../assets/TStyle';
 import { SearchNormal, Notification, Home2, User, DiscountShape, TransactionMinus, LocationDiscover, Discover, Notepad2, ArrowRight, Heart } from 'iconsax-react-native';
 import { useState } from 'react';
-import { Navbar, Card, BottomBar } from '../../components';
+import { Navbar, Card, BottomBar, HorizontalList, PageWrapper } from '../../components';
 import { gymLists, newsList } from '../../data';
 
 export default function Home() {
 
     return (
-        <>
+        <PageWrapper>
             {/* NAVBAR SECTION */}
             <Navbar />
 
@@ -43,11 +43,12 @@ export default function Home() {
                     <Text style={{ color: colors.primary }}>See More</Text>
                 </View>
 
-                <ScrollView style={{ paddingLeft: TPadding.md }} horizontal showsHorizontalScrollIndicator={false}>
+                
+                <HorizontalList>
                     {gymLists.map((el, i) => (
                         <Card key={i} id={i} imageSrc={el.img} caption={el.title} />
                     ))}
-                </ScrollView>
+                </HorizontalList>
 
 
                 {/* NEWS SECTION */}
@@ -56,18 +57,18 @@ export default function Home() {
                     <Text style={{ color: colors.primary }}>See More</Text>
                 </View>
 
-                <ScrollView style={{ paddingLeft: TPadding.md }} horizontal showsHorizontalScrollIndicator={false}>
+                <HorizontalList>
                     {newsList.map((el, i) => <Card key={i} id={i} imageSrc={el.img} caption={el.title} />)}
-                </ScrollView>
+                </HorizontalList>
 
-                <View style={{ height: 100 }}>
+                <View style={{ height: 70 }}>
 
                 </View>
             </ScrollView>
 
             {/* BOTTOM NAV SECTION */}
-            <BottomBar />
-        </>
+            {/* <BottomBar /> */}
+        </PageWrapper>
     );
 }
 

@@ -3,7 +3,7 @@ import { SearchNormal } from 'iconsax-react-native';
 import { colors } from '../../assets/theme';
 import { TFontSize, TRadius } from '../../assets/TStyle';
 
-const SearchInput = ({ value, onChangeText }) => {
+const SearchInput = ({ value, onChangeText, placeholder = 'Search...' }) => {
   return (
     <View style={styles.container}>
       <SearchNormal
@@ -13,7 +13,7 @@ const SearchInput = ({ value, onChangeText }) => {
         style={styles.icon}
       />
       <TextInput
-        placeholder="Search news..."
+        placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
         style={styles.input}
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: TFontSize.sm,
-    color: colors.textPrimary,
+    color: colors.textSecondary,
     paddingVertical: 0,
   },
 });

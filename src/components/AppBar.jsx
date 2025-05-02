@@ -5,18 +5,16 @@ import { TFontSize } from '../../assets/TStyle';
 
 const AppBar = ({ title }) => {
   return (
-    <>
-      <View style={styles.appBar}>
-        <Text style={styles.title}>{title}</Text>
-      </View>
-    </>
+    <View style={styles.appBar}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   appBar: {
     backgroundColor: colors.primary,
-    height: Platform.OS === 'ios' ? 90 : 56,
+    height: Platform.OS === 'ios' ? 80 : 50,
     // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     width: '100%',
     justifyContent: 'center',
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
     zIndex: 10,
-    position: 'absolute',
+    // position: 'absolute',
     top: 0,
     left: 0,
   },

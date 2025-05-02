@@ -1,105 +1,71 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
-import { colors } from "../../assets/theme";
-import { TFontSize } from "../../assets/TStyle";
-import { Discover, Home2, Notepad2, User } from "iconsax-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
-import News from "../screens/News";
-import Profile from "../screens/Profile";
+import { View, TouchableOpacity, Text } from 'react-native';
+import { Home2, Discover, Notepad2, User } from 'iconsax-react-native';
+import { colors } from '../../assets/theme';
+import { TFontSize } from '../../assets/TStyle';
 
-const Tab = createBottomTabNavigator();
-
-const BottomBar = () => {
+const BottomBar = ({ activeTab, setActiveTab }) => {
+  const tabs = [
+    { name: 'Home', icon: Home2 },
+    { name: 'Explore', icon: Discover },
+    { name: 'News', icon: Notepad2 },
+    { name: 'Profile', icon: User },
+  ];
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: styles.container,
-        tabBarActiveTintColor: colors.danger,
-        tabBarInactiveTintColor: colors.textPrimary,
-        tabBarLabelStyle: styles.text,
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <Home2 
-              color={color} 
-              size={26} 
-              variant={focused ? 'Bold' : 'Linear'} 
+    
+    <View style={styles.container}>
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.name;
+        
+        return (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.tabItem}
+            onPress={() => setActiveTab(tab.name)}
+          >
+            <Icon
+              color={isActive ? colors.danger : colors.textPrimary}
+              size={26}
+              variant={isActive ? 'Bold' : 'Linear'}
             />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Explore"
-        component={''}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <Discover 
-              color={color} 
-              size={26} 
-              variant={focused ? 'Bold' : 'Linear'} 
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="News"
-        component={News}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <Notepad2 
-              color={color} 
-              size={26} 
-              variant={focused ? 'Bold' : 'Linear'} 
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <User 
-              color={color} 
-              size={26} 
-              variant={focused ? 'Bold' : 'Linear'} 
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+            <Text style={[
+              styles.text,
+              { color: isActive ? colors.danger : colors.textPrimary }
+            ]}>
+              {tab.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    // height: 70,
+    paddingHorizontal: 10,
     position: 'absolute',
     bottom: 0,
     left: 0,
-    backgroundColor: colors.primary,
-    height: 70,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    gap: 2,
-    alignItems: 'center'
+    right: 0,
+    paddingVertical: 12,
+    marginBottom: 10,
   },
-  item: {
-    gap: 2,
-    alignItems: 'center'
+  tabItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   text: {
     fontSize: TFontSize.sm,
-    color: colors.textPrimary
-  }
-});
+    marginTop: 4,
+  },
+};
 
 export default BottomBar;

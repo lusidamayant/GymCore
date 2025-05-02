@@ -1,6 +1,6 @@
 const colors = {
     primary: '#f5ed05',
-    secondary: '#d4c904',
+    secondary: '#f5c105',
     success: '#c2b303',
     danger: '#e85233',
     warning: '#9e8701',
