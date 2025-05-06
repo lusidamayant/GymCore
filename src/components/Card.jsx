@@ -1,15 +1,46 @@
 import { ArrowRight, Heart } from "iconsax-react-native";
-import { useState } from "react";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../assets/theme";
 import { TPadding, TRadius } from "../../assets/TStyle";
 
 const Card = ({ id, imageSrc, caption }) => {
     const [isLoved, setIsLoved] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const shimmerAnim = new Animated.Value(0);
+
+    useEffect(() => {
+        const timer = setTimeout(() => { setIsLoading(false) }, 2000);
+
+        const shimmerLoop = Animated.loop(
+            Animated.timing(shimmerAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true
+            })
+        );
+
+        shimmerLoop.start();
+
+        return () => {
+            clearTimeout(timer);
+            shimmerLoop.stop();
+        }
+    }, []);
+
+    const shimmerTranslate = shimmerAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-200, Dimensions.get('window').width + 200]
+    });
 
     return (
-        <View key={id} style={styles.card}>
-            <Image source={{ uri: imageSrc }} style={styles.image} />
+        isLoading ? <View style={shimmer.container}>
+
+            <Animated.View style={[shimmer.shiny, {
+                transform: [{ translateX: shimmerTranslate}, {rotate: '20deg'}]
+            }]} />
+        </View> : <View key={id} style={styles.card}>
+            <Image source={{ uri: imageSrc }} style={styles.image} onLoad={() => setIsLoading(false)} />
             <View style={wishlist.container}>
                 <TouchableOpacity style={wishlist.icon} onPress={() => setIsLoved(!isLoved)}>
                     <Heart color={isLoved ? colors.danger : colors.black} size={32} variant={isLoved ? "Bold" : "Outline"} />
@@ -71,6 +102,26 @@ const wishlist = StyleSheet.create({
         right: 16,
         justifyContent: 'center',
         alignItems: 'center',
+    }
+});
+
+const shimmer = StyleSheet.create({
+    container: {
+        width: Dimensions.get('window').width - 20,
+        height: 240,
+        borderRadius: TRadius.md,
+        marginRight: 10,
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: '#e1e1e1'
+    },
+    shiny: {
+        position: 'absolute',
+        width: '16%',
+        height: '300%',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        top: '-100%',
+        left: 0,
     }
 });
 
