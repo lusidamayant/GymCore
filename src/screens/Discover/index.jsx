@@ -13,9 +13,9 @@ export default function Discover() {
 
     return (
         <PageWrapper>
-            <AppBar title="Explore Gym Doorz" />
+            <AppBar title="Explore Gym Core" />
             <ScrollView style={{ padding: 10, marginTop: 6 }} showsVerticalScrollIndicator={false}>
-                <SearchInput value={search} onChangeText={setSearch} placeholder="Search GymDoorz..." />
+                <SearchInput value={search} onChangeText={setSearch} placeholder="Search GymCore..." />
 
                 {/* 📰 News List */}
                 {filteredGym.map((el, i) => (

@@ -39,7 +39,7 @@ export default function Home() {
                 </View>
 
                 <View style={content.container}>
-                    <Text style={[content.text, { fontSize: TFontSize.lg, fontWeight: TFontWeight.bold }]}>Nearby Gym Doorz</Text>
+                    <Text style={[content.text, { fontSize: TFontSize.lg, fontWeight: TFontWeight.bold }]}>Nearby Gym Core</Text>
                     <Text style={{ color: colors.primary }}>See More</Text>
                 </View>
 
