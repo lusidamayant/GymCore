@@ -1,17 +1,16 @@
 import { ArrowRight, Heart } from "iconsax-react-native";
 import { useEffect, useState } from "react";
-import { Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Dimensions, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../assets/theme";
 import { TPadding, TRadius } from "../../assets/TStyle";
+import { useNavigation } from "expo-router";
 
-const Card = ({ id, imageSrc, caption }) => {
+const Card = ({ id, imageSrc, caption, loading = false }) => {
     const [isLoved, setIsLoved] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     const shimmerAnim = new Animated.Value(0);
+    const navigation = useNavigation();
 
     useEffect(() => {
-        const timer = setTimeout(() => { setIsLoading(false) }, 2000);
-
         const shimmerLoop = Animated.loop(
             Animated.timing(shimmerAnim, {
                 toValue: 1,
@@ -23,7 +22,6 @@ const Card = ({ id, imageSrc, caption }) => {
         shimmerLoop.start();
 
         return () => {
-            clearTimeout(timer);
             shimmerLoop.stop();
         }
     }, []);
@@ -33,25 +31,31 @@ const Card = ({ id, imageSrc, caption }) => {
         outputRange: [-200, Dimensions.get('window').width + 200]
     });
 
+    if (loading) {
+        return (
+            <View style={shimmer.container}>
+                <Animated.View style={[shimmer.shiny, {
+                    transform: [{ translateX: shimmerTranslate }, { rotate: '20deg' }]
+                }]} />
+            </View>
+        );
+    }
+
     return (
-        isLoading ? <View style={shimmer.container}>
-
-            <Animated.View style={[shimmer.shiny, {
-                transform: [{ translateX: shimmerTranslate}, {rotate: '20deg'}]
-            }]} />
-        </View> : <View key={id} style={styles.card}>
-            <Image source={{ uri: imageSrc }} style={styles.image} onLoad={() => setIsLoading(false)} />
-            <View style={wishlist.container}>
-                <TouchableOpacity style={wishlist.icon} onPress={() => setIsLoved(!isLoved)}>
-                    <Heart color={isLoved ? colors.danger : colors.black} size={32} variant={isLoved ? "Bold" : "Outline"} />
-                </TouchableOpacity>
+        <Pressable onPress={() => navigation.navigate('DetailNews', { newsId: id })}>
+            <View key={id} style={styles.card}>
+                <Image source={{ uri: imageSrc }} style={styles.image} />
+                <View style={wishlist.container}>
+                    <TouchableOpacity style={wishlist.icon} onPress={() => setIsLoved(!isLoved)}>
+                        <Heart color={isLoved ? colors.danger : colors.black} size={32} variant={isLoved ? "Bold" : "Outline"} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.label}>
+                    <Text style={styles.text}>{caption}</Text>
+                    <ArrowRight color={colors.black} size={22} />
+                </View>
             </View>
-            <View style={styles.label}>
-                <Text style={styles.text}>{caption}</Text>
-
-                <ArrowRight color={colors.black} size={22} />
-            </View>
-        </View>
+        </Pressable>
     );
 }
 

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     View,
     Text,
@@ -7,7 +6,8 @@ import {
     StyleSheet,
     Image,
     ScrollView,
-    Alert
+    Alert,
+    ActivityIndicator
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ArrowLeft, Gallery, CloseSquare } from 'iconsax-react-native';
@@ -15,9 +15,12 @@ import { colors } from '../../../../assets/theme';
 import { TRadius } from '../../../../assets/TStyle';
 import { PageWrapper } from '../../../components';
 import axios from 'axios';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 
-export default function CreateNews({ navigation }) {
-    // const navigation = useNavigation();
+export default function EditNews({ navigation }) {
+    const route = useRoute();
+    const { newsId } = route.params;
 
     const [formData, setFormData] = useState({
         title: '',
@@ -25,6 +28,28 @@ export default function CreateNews({ navigation }) {
         img: null
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        fetchNewsDetail();
+    }, [newsId]);
+
+    const fetchNewsDetail = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`);
+            setFormData({
+                title: response.data.title,
+                description: response.data.description,
+                img: response.data.img
+            });
+        } catch (error) {
+            console.error('Error fetching news:', error);
+            Alert.alert('Error', 'Failed to load news details');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleChange = (name, value) => {
         setFormData({
@@ -34,11 +59,17 @@ export default function CreateNews({ navigation }) {
     };
 
     const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission required', 'We need gallery permission to pick images');
+            return;
+        }
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaType.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.8,
         });
 
         if (!result.canceled) {
@@ -52,57 +83,50 @@ export default function CreateNews({ navigation }) {
 
     const handleSubmit = async () => {
         if (!formData.title || !formData.description) {
-            Alert.alert('Error', 'Judul dan deskripsi harus diisi');
+            Alert.alert('Error', 'Title and description are required');
             return;
         }
 
-        setIsLoading(true);
+        setIsSubmitting(true);
 
         try {
-            // 1. Upload gambar terlebih dahulu jika ada
-            // let imageUrl = null;
-            // if (formData.image) {
-            //     imageUrl = await uploadImageToAPI();
-            // }
-
-            // 2. Kirim data berita ke API
             const newsData = {
                 title: formData.title,
                 description: formData.description,
-                // img: imageUrl || 'https://default-image-url.com/default.jpg',
-                img: formData.img,
-                createdAt: new Date().toISOString()
+                img: formData.img
             };
 
-            const response = await axios.post(
-                'https://681af97e17018fe50579516b.mockapi.io/api/News',
+            await axios.put(
+                `https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`,
                 newsData
             );
 
-            Alert.alert('Success', 'Berita berhasil dibuat');
+            Alert.alert('Success', 'News updated successfully');
             navigation.goBack();
         } catch (error) {
             console.error('Error:', error);
-            Alert.alert('Error', 'Gagal membuat berita');
+            Alert.alert('Error', 'Failed to update news');
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
+
+    if (isLoading) {
+        return (
+            <PageWrapper>
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={colors.primary} />
+                </View>
+            </PageWrapper>
+        );
+    }
 
     return (
         <PageWrapper>
             <View style={styles.container}>
-                {/* Header */}
-                {/* <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <ArrowLeft color={colors.textPrimary} size={24} />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Create News</Text>
-                <View style={{ width: 24 }} />
-            </View> */}
 
                 <ScrollView contentContainerStyle={styles.formContainer}>
-                    {/* Judul Input */}
+                    {/* Title Input */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Title</Text>
                         <TextInput
@@ -114,7 +138,7 @@ export default function CreateNews({ navigation }) {
                         />
                     </View>
 
-                    {/* Deskripsi Input */}
+                    {/* Description Input */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Description</Text>
                         <TextInput
@@ -128,7 +152,7 @@ export default function CreateNews({ navigation }) {
                         />
                     </View>
 
-                    {/* Gambar Input */}
+                    {/* Image Input */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Image</Text>
                         <TextInput
@@ -138,18 +162,26 @@ export default function CreateNews({ navigation }) {
                             onChangeText={(text) => handleChange('img', text)}
                             placeholderTextColor={colors.textSecondary}
                         />
-                        {/* {formData.image ? (
+                        {/* {formData.img ? (
                             <View style={styles.imagePreviewContainer}>
                                 <Image
-                                    source={{ uri: formData.image }}
+                                    source={{ uri: formData.img }}
                                     style={styles.imagePreview}
                                 />
-                                <TouchableOpacity
-                                    style={styles.removeImageButton}
-                                    onPress={removeImage}
-                                >
-                                    <CloseSquare color="white" size={20} variant="Bold" />
-                                </TouchableOpacity>
+                                <View style={styles.imageActions}>
+                                    <TouchableOpacity
+                                        style={styles.changeImageButton}
+                                        onPress={pickImage}
+                                    >
+                                        <Text style={styles.imageActionText}>Change</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.removeImageButton}
+                                        onPress={removeImage}
+                                    >
+                                        <Text style={styles.imageActionText}>Remove</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         ) : (
                             <TouchableOpacity
@@ -157,20 +189,22 @@ export default function CreateNews({ navigation }) {
                                 onPress={pickImage}
                             >
                                 <Gallery color={colors.primary} size={32} />
-                                <Text style={styles.imagePickerText}>Pilih Gambar</Text>
+                                <Text style={styles.imagePickerText}>Select Image</Text>
                             </TouchableOpacity>
                         )} */}
                     </View>
 
                     {/* Submit Button */}
                     <TouchableOpacity
-                        style={styles.submitButton}
+                        style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
                         onPress={handleSubmit}
-                        disabled={isLoading}
+                        disabled={isSubmitting}
                     >
-                        <Text style={styles.submitButtonText}>
-                            {isLoading ? 'Saving...' : 'Publish News'}
-                        </Text>
+                        {isSubmitting ? (
+                            <ActivityIndicator color={colors.textPrimary} />
+                        ) : (
+                            <Text style={styles.submitButtonText}>Update News</Text>
+                        )}
                     </TouchableOpacity>
                 </ScrollView>
             </View>
@@ -243,16 +277,30 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: TRadius.sm,
     },
-    removeImageButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        backgroundColor: colors.danger,
-        borderRadius: 20,
-        width: 32,
-        height: 32,
-        justifyContent: 'center',
+    imageActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    changeImageButton: {
+        backgroundColor: colors.primary,
+        padding: 10,
+        borderRadius: TRadius.sm,
+        flex: 1,
+        marginRight: 5,
         alignItems: 'center',
+    },
+    removeImageButton: {
+        backgroundColor: colors.danger,
+        padding: 10,
+        borderRadius: TRadius.sm,
+        flex: 1,
+        marginLeft: 5,
+        alignItems: 'center',
+    },
+    imageActionText: {
+        color: colors.textPrimary,
+        fontWeight: '500',
     },
     submitButton: {
         backgroundColor: colors.primary,
@@ -262,9 +310,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
     },
+    submitButtonDisabled: {
+        opacity: 0.7,
+    },
     submitButtonText: {
         color: colors.textPrimary,
         fontWeight: 'bold',
         fontSize: 16,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

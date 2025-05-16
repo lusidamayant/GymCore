@@ -5,6 +5,8 @@ import { Home, Discover, Profile, News } from '../screens';
 import { Home2, Discover as DiscoverIcon, Receipt21, ProfileCircle } from 'iconsax-react-native';
 import { fontType, colors } from '../../assets/theme';
 import CreateNews from '../screens/News/Create';
+import DetailNews from '../screens/News/Detail';
+import EditNews from '../screens/News/Edit';
 import { Platform, StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -79,23 +81,28 @@ function MoreTabs() {
     );
 }
 
-const Router = () => {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-            }}
-        >
-            <Stack.Screen name="MainTab" component={MainTab} />
-            <Stack.Screen
-                name="CreateNews"
-                component={CreateNews}
-                options={{ headerShown: true, headerStyle: styles.header, title: "Create News"}}
-            />
-        </Stack.Navigator>
-    );
-}
+const Router = () => (
+    <Stack.Navigator
+        screenOptions={{
+            headerShown: false,
+            ...TransitionPresets.SlideFromRightIOS,
+        }}
+    >
+        <Stack.Screen name="MainTab" component={MainTab} />
+        <Stack.Screen
+            name="CreateNews"
+            component={CreateNews}
+            options={{ headerShown: true, headerStyle: styles.header, title: "Create News" }} />
+        <Stack.Screen
+            name="DetailNews"
+            component={DetailNews}
+            options={{ headerShown: false, headerStyle: styles.header, title: "News Detail" }} />
+        <Stack.Screen
+            name="EditNews"
+            component={EditNews}
+            options={{ headerShown: true, headerStyle: styles.header, title: "Edit News" }} />
+    </Stack.Navigator>
+)
 
 export default Router;
 
