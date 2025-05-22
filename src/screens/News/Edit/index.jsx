@@ -17,6 +17,8 @@ import { PageWrapper } from '../../../components';
 import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 
 export default function EditNews({ navigation }) {
     const route = useRoute();
@@ -28,6 +30,9 @@ export default function EditNews({ navigation }) {
         img: null
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [image, setImage] = useState(null);
+    const [oldImage, setOldImage] = useState(null);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -37,11 +42,24 @@ export default function EditNews({ navigation }) {
     const fetchNewsDetail = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get(`https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`);
-            setFormData({
-                title: response.data.title,
-                description: response.data.description,
-                img: response.data.img
+
+            const newsRef = doc(db, 'News', newsId)
+
+            const unsub = onSnapshot(newsRef, (snapshot) => {
+                const newsData = snapshot.data()
+
+                if (newsData) {
+
+                    setFormData({
+                        title: newsData.title,
+                        description: newsData.description,
+                        img: newsData.img
+                    });
+                    setOldImage(newsData.img);
+                    setImage(newsData.img);
+                } else {
+                    console.log("News not found");
+                }
             });
         } catch (error) {
             console.error('Error fetching news:', error);
@@ -59,21 +77,36 @@ export default function EditNews({ navigation }) {
     };
 
     const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permission required', 'We need gallery permission to pick images');
-            return;
-        }
+        try {
+            // Memeriksa dan meminta permission
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert(
+                    'Permission required',
+                    'Sorry, we need camera roll permissions to make this work!',
+                    [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+                );
+                return;
+            }
 
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaType.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.8,
-        });
+            // Membuka image picker
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
 
-        if (!result.canceled) {
-            handleChange('img', result.assets[0].uri);
+            console.log('Image picker result:', result); // Debugging
+
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                handleChange('img', result.assets[0].uri);
+                // console.log(result.assets[0].uri);
+                setImage(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error picking image:', error);
+            Alert.alert('Error', 'Failed to pick image');
         }
     };
 
@@ -89,17 +122,50 @@ export default function EditNews({ navigation }) {
 
         setIsSubmitting(true);
 
+        let filename = image.substring(image.lastIndexOf('/') + 1);
+        const extension = filename.split('.').pop();
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+
         try {
+            let newImageUrl = image;
+            
+            if (image !== oldImage && oldImage) {
+                await fetch(`https://backend-file-praktikum.vercel.app/delete/${image}`, {
+                    method: 'POST',
+                });
+            }
+
+            if (image !== oldImage) {
+                const imageFormData = new FormData();
+                imageFormData.append('file', {
+                    uri: image,
+                    type: `image/${extension}`,
+                    name: filename,
+                });
+
+                const result = await fetch('https://backend-file-praktikum.vercel.app/upload/', {
+                    method: 'POST',
+                    body: imageFormData,
+                });
+                if (result.status !== 200) {
+                    throw new Error("failed to upload image");
+                }
+
+                const { url } = await result.json();
+                newImageUrl = url;
+            }
+
+            const url = image !== oldImage ? newImageUrl : oldImage;
+
             const newsData = {
                 title: formData.title,
                 description: formData.description,
-                img: formData.img
+                img: url
             };
 
-            await axios.put(
-                `https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`,
-                newsData
-            );
+            const newsRef = doc(db, 'News', newsId);
+            updateDoc(newsRef, newsData);
 
             Alert.alert('Success', 'News updated successfully');
             navigation.goBack();
@@ -155,14 +221,14 @@ export default function EditNews({ navigation }) {
                     {/* Image Input */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Image</Text>
-                        <TextInput
+                        {/* <TextInput
                             style={[styles.input]}
                             placeholder="Put image url"
                             value={formData.img}
                             onChangeText={(text) => handleChange('img', text)}
                             placeholderTextColor={colors.textSecondary}
-                        />
-                        {/* {formData.img ? (
+                        /> */}
+                        {formData.img ? (
                             <View style={styles.imagePreviewContainer}>
                                 <Image
                                     source={{ uri: formData.img }}
@@ -191,7 +257,7 @@ export default function EditNews({ navigation }) {
                                 <Gallery color={colors.primary} size={32} />
                                 <Text style={styles.imagePickerText}>Select Image</Text>
                             </TouchableOpacity>
-                        )} */}
+                        )}
                     </View>
 
                     {/* Submit Button */}

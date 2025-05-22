@@ -15,6 +15,8 @@ import { colors } from '../../../../assets/theme';
 import { TRadius } from '../../../../assets/TStyle';
 import { PageWrapper } from '../../../components';
 import axios from 'axios';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 
 export default function CreateNews({ navigation }) {
     // const navigation = useNavigation();
@@ -25,6 +27,7 @@ export default function CreateNews({ navigation }) {
         img: null
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [image, setImage] = useState(null);
 
     const handleChange = (name, value) => {
         setFormData({
@@ -34,20 +37,28 @@ export default function CreateNews({ navigation }) {
     };
 
     const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission required', 'We need gallery permission to pick images');
+            return;
+        }
+
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaType.Images,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
 
-        if (!result.canceled) {
+        if (!result.canceled && result.assets && result.assets.length > 0) {
             handleChange('img', result.assets[0].uri);
+            setImage(result.assets[0].uri);
         }
     };
 
     const removeImage = () => {
         handleChange('img', null);
+        setImage(null);
     };
 
     const handleSubmit = async () => {
@@ -58,26 +69,49 @@ export default function CreateNews({ navigation }) {
 
         setIsLoading(true);
 
+        let filename = image.substring(image.lastIndexOf('/') + 1);
+        const extension = filename.split('.').pop();
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+
+
         try {
             // 1. Upload gambar terlebih dahulu jika ada
             // let imageUrl = null;
             // if (formData.image) {
             //     imageUrl = await uploadImageToAPI();
             // }
+            const imageFormData = new FormData();
+            imageFormData.append('file', {
+                uri: image,
+                type: `image/${extension}`,
+                name: filename,
+            });
+
+            const result = await fetch('https://backend-file-praktikum.vercel.app/upload/', {
+                method: 'POST',
+                body: imageFormData,
+            });
+
+            if (result.status !== 200) {
+                throw new Error("failed to upload image");
+            }
+
+            const { url } = await result.json();
+            let newImageUrl = url;
 
             // 2. Kirim data berita ke API
             const newsData = {
                 title: formData.title,
                 description: formData.description,
                 // img: imageUrl || 'https://default-image-url.com/default.jpg',
-                img: formData.img,
+                img: newImageUrl,
                 createdAt: new Date().toISOString()
             };
 
-            const response = await axios.post(
-                'https://681af97e17018fe50579516b.mockapi.io/api/News',
-                newsData
-            );
+            const newsRef = collection(db, 'News');
+
+            addDoc(newsRef, newsData);
 
             Alert.alert('Success', 'Berita berhasil dibuat');
             navigation.goBack();
@@ -131,17 +165,17 @@ export default function CreateNews({ navigation }) {
                     {/* Gambar Input */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Image</Text>
-                        <TextInput
+                        {/* <TextInput
                             style={[styles.input]}
                             placeholder="Put image url"
                             value={formData.img}
                             onChangeText={(text) => handleChange('img', text)}
                             placeholderTextColor={colors.textSecondary}
-                        />
-                        {/* {formData.image ? (
+                        /> */}
+                        {formData.img ? ( // Gunakan formData.img yang konsisten
                             <View style={styles.imagePreviewContainer}>
                                 <Image
-                                    source={{ uri: formData.image }}
+                                    source={{ uri: formData.img }} // Perbaiki dari formData.image ke formData.img
                                     style={styles.imagePreview}
                                 />
                                 <TouchableOpacity
@@ -159,7 +193,7 @@ export default function CreateNews({ navigation }) {
                                 <Gallery color={colors.primary} size={32} />
                                 <Text style={styles.imagePickerText}>Pilih Gambar</Text>
                             </TouchableOpacity>
-                        )} */}
+                        )}
                     </View>
 
                     {/* Submit Button */}
