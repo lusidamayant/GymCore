@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import Fab from "../../components/Fab";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { getFirestore, collection, onSnapshot }  from 'firebase/firestore';
+import { db } from "../../../firebaseConfig";
 
 export default function News() {
     const [search, setSearch] = useState('');
@@ -25,8 +27,20 @@ export default function News() {
     const loadNews = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('https://681af97e17018fe50579516b.mockapi.io/api/News');
-            setNews(response.data);
+            const newsRef = collection(db, 'News');
+
+            const subscriber = onSnapshot(newsRef, (snapshot) => {
+                const news = [];
+                snapshot.forEach((doc) => {
+                    news.push({
+                        ...doc.data(),
+                        id: doc.id
+                    })
+                });
+                console.log(news);
+                setNews(news);
+            });
+            // setNews(response.data);
         } catch (error) {
             console.error(error);
         } finally {

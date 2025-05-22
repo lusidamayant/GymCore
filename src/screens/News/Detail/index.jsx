@@ -14,6 +14,8 @@ import { colors } from '../../../../assets/theme';
 import { PageWrapper } from '../../../components';
 import axios from 'axios';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 
 export default function DetailNews() {
     const navigation = useNavigation();
@@ -31,8 +33,17 @@ export default function DetailNews() {
 
     const fetchNewsDetail = async () => {
         try {
-            const response = await axios.get(`https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`);
-            setNews(response.data);
+            const newsRef = doc(db, 'News', newsId)
+
+            const unsub = onSnapshot(newsRef, (snapshot) => {
+                const newsData = snapshot.data()
+
+                if(newsData){
+                    setNews(newsData)
+                }else{
+                    console.log("News not found");
+                }
+            });
         } catch (error) {
             console.error('Error fetching news:', error);
             Alert.alert('Error', 'Failed to load news details');
@@ -62,7 +73,9 @@ export default function DetailNews() {
     const confirmDelete = async () => {
         setDeleting(true);
         try {
-            await axios.delete(`https://681af97e17018fe50579516b.mockapi.io/api/News/${newsId}`);
+            const newsRef = doc(db, 'News', newsId);
+            deleteDoc(newsRef);
+            
             Alert.alert('Success', 'News deleted successfully');
             navigation.goBack();
         } catch (error) {
