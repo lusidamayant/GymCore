@@ -1,17 +1,17 @@
 export const gymLists = [
     {
         id: 1,
-        title: "Gym Doorz Malang (10 Km)",
+        title: "Gym Core Malang (10 Km)",
         img: "https://cove-blog-id.sgp1.cdn.digitaloceanspaces.com/cove-blog-id/2024/04/one-eighty.webp"
     },
     {
         id: 2,
-        title: "Gym Doorz Surabaya (80 Km)",
+        title: "Gym Core Surabaya (80 Km)",
         img: "https://malangraya.blok-a.com/wp-content/uploads/sites/5/2024/03/WhatsApp-Image-2024-03-07-at-19.46.57-1.jpeg"
     },
     {
         id: 3,
-        title: "Gym Doorz Jakarta (220 Km)",
+        title: "Gym Core Jakarta (220 Km)",
         img: "https://smartlegal.id/wp-content/uploads/bb-plugin/cache/usaha-gym-jpg-landscape.webp"
     },
 ];
@@ -36,8 +36,8 @@ export const newsList = [
 
 export const ProfileData = {
     image:
-      'https://wallpapercat.com/w/full/5/0/e/1590323-3840x2160-desktop-4k-the-punisher-tv-series-wallpaper.jpg',
-    name: 'Budiono',
-    email: "budiono@gmail.com",
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfi7MW-lrdQLRLE6bvBBdNfqT86HaJ7YjfeQ&s',
+    name: 'Markonah',
+    email: "markonah@gmail.com",
     birthDate: '18 Mar, 1980'
   };

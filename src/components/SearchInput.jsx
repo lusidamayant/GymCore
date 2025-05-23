@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: TFontSize.sm,
-    color: colors.textPrimary,
+    color: colors.textSecondary,
     paddingVertical: 0,
   },
 });
