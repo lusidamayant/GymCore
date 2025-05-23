@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <View style={navbar.container}>
       <View style={navbar.searchBox}>
-        <Text style={{ color: colors.white }}>Search Gym Doorz Location</Text>
+        <Text style={{ color: colors.white }}>Search Gym Core Location</Text>
         <SearchNormal color={colors.white} size={20} />
       </View>
       {/* <View>

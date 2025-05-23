@@ -1,52 +1,71 @@
-import { StyleSheet, Text, View } from "react-native"
-import { colors } from "../../assets/theme";
-import { TFontSize } from "../../assets/TStyle";
-import { Discover, Home2, Notepad2, User } from "iconsax-react-native";
+import { View, TouchableOpacity, Text } from 'react-native';
+import { Home2, Discover, Notepad2, User } from 'iconsax-react-native';
+import { colors } from '../../assets/theme';
+import { TFontSize } from '../../assets/TStyle';
 
-const BottomBar = () => {
+const BottomBar = ({ activeTab, setActiveTab }) => {
+  const tabs = [
+    { name: 'Home', icon: Home2 },
+    { name: 'Explore', icon: Discover },
+    { name: 'News', icon: Notepad2 },
+    { name: 'Profile', icon: User },
+  ];
+
   return (
-    <View style={bottomNav.container}>
-        <View style={bottomNav.item}>
-          <Home2 color={colors.danger} size={26} variant='Bold' />
-          <Text style={[bottomNav.text, { color: colors.danger }]}>Home</Text>
-        </View>
-        <View style={bottomNav.item}>
-          <Discover color={colors.textPrimary} size={26} variant='Bold' />
-          <Text style={bottomNav.text}>Explore</Text>
-        </View>
-        <View style={bottomNav.item}>
-          <Notepad2 color={colors.textPrimary} size={26} variant='Bold' />
-          <Text style={bottomNav.text}>News</Text>
-        </View>
-        <View style={bottomNav.item}>
-          <User color={colors.textPrimary} size={26} variant='Bold' />
-          <Text style={bottomNav.text}>Profile</Text>
-        </View>
-      </View>
+    
+    <View style={styles.container}>
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.name;
+        
+        return (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.tabItem}
+            onPress={() => setActiveTab(tab.name)}
+          >
+            <Icon
+              color={isActive ? colors.danger : colors.textPrimary}
+              size={26}
+              variant={isActive ? 'Bold' : 'Linear'}
+            />
+            <Text style={[
+              styles.text,
+              { color: isActive ? colors.danger : colors.textPrimary }
+            ]}>
+              {tab.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
-}
+};
 
-const bottomNav = StyleSheet.create({
-container: {
+const styles = {
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    // height: 70,
+    paddingHorizontal: 10,
     position: 'absolute',
     bottom: 0,
     left: 0,
-    backgroundColor: colors.primary,
-    height: 70,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    gap: 2,
-    alignItems: 'center'
-},
-item: {
-    gap: 2,
-    alignItems: 'center'
-},
-text: {
+    right: 0,
+    paddingVertical: 12,
+    marginBottom: 10,
+  },
+  tabItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  text: {
     fontSize: TFontSize.sm,
-    color: colors.textPrimary
-}
-});
+    marginTop: 4,
+  },
+};
 
 export default BottomBar;

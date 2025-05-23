@@ -1,6 +1,6 @@
 const colors = {
     primary: '#3498db',
-    secondary: '#d4c904',
+    secondary: '#098ce3',
     success: '#c2b303',
     danger: '#e85233',
     warning: '#9e8701',
@@ -13,7 +13,7 @@ const colors = {
     gray: '#bfbf5e',
     grayDark: '#7a7a3a',
     base: '#f7f7f7',
-    textPrimary : "#f7f7f7",
+    textPrimary : "#F0F0EC",
     textSecondary : "#1f1f1d",
 }
 
